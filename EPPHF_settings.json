@@ -1,0 +1,1976 @@
+{
+  "selected_game": "ACR",
+  "profiles": {
+    "LMU": {
+      "game": "AC",
+      "udp_port": 20444,
+      "f1_udp_port": 20777,
+      "com_port": "COM7",
+      "baudrate": 115200,
+      "system_enabled": true,
+      "send_rate": 100,
+      "read_rate": 1000,
+      "alerts": {
+        "lock": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 50
+        },
+        "prediction": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 40
+        },
+        "brake_warning": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 20
+        }
+      },
+      "advanced": {
+        "brake_threshold": 0.04,
+        "slip_threshold": 0.15,
+        "slip_derivative_threshold": 0.1,
+        "prediction_horizon_ms": 15,
+        "warning_min_speed_kmh": 0.0,
+        "warning_onset_intercept": 65.0,
+        "warning_max_speed_kmh": 250.0,
+        "warning_max_intercept": 90.0,
+        "warning_max_slope": 0.2,
+        "min_slip_threshold": 0.05,
+        "warning_grip_coefficient": 0.0
+      },
+      "lmu_class_warnings": {
+        "HYP": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 10,
+            "intensity": 80
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 1.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 250.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.225
+          },
+          "detection": {
+            "brake_threshold": 0.04,
+            "min_slip_threshold": 0.02,
+            "slip_threshold": 0.05,
+            "slip_derivative_threshold": 0.1,
+            "prediction_horizon_ms": 15
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 70,
+              "intensity": 48
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 60,
+              "intensity": 40
+            }
+          }
+        },
+        "LMP2_ELMS": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 10,
+            "intensity": 80
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 200.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.15
+          },
+          "detection": {
+            "brake_threshold": 0.04,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.04,
+            "slip_derivative_threshold": 0.1,
+            "prediction_horizon_ms": 15
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          }
+        },
+        "LMP2": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 220.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.18
+          },
+          "detection": {
+            "brake_threshold": 0.04,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.04,
+            "slip_derivative_threshold": 0.1,
+            "prediction_horizon_ms": 15
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          }
+        },
+        "LMP3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 10,
+            "intensity": 80
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 1.0,
+            "warning_onset_intercept": 70.0,
+            "warning_max_speed_kmh": 210.0,
+            "warning_max_intercept": 90.5,
+            "warning_max_slope": 0.155
+          },
+          "detection": {
+            "brake_threshold": 0.04,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.04,
+            "slip_derivative_threshold": 0.1,
+            "prediction_horizon_ms": 15
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          }
+        },
+        "GTE": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 10,
+            "intensity": 79
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 70.0,
+            "warning_max_speed_kmh": 145.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.12
+          },
+          "detection": {
+            "brake_threshold": 0.04,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.04,
+            "slip_derivative_threshold": 0.1,
+            "prediction_horizon_ms": 15
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          }
+        },
+        "GT3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 130.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.09
+          },
+          "detection": {
+            "brake_threshold": 0.04,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.04,
+            "slip_derivative_threshold": 0.1,
+            "prediction_horizon_ms": 15
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          }
+        }
+      }
+    },
+    "AC": {
+      "game": "ACR",
+      "udp_port": 20444,
+      "f1_udp_port": 20777,
+      "com_port": "COM7",
+      "baudrate": 115200,
+      "system_enabled": true,
+      "send_rate": 100,
+      "read_rate": 333,
+      "alerts": {
+        "lock": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 50
+        },
+        "prediction": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 40
+        },
+        "brake_warning": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 20
+        }
+      },
+      "advanced": {
+        "brake_threshold": 0.05,
+        "slip_threshold": 0.5,
+        "slip_derivative_threshold": 0.3,
+        "prediction_horizon_ms": 30,
+        "warning_min_speed_kmh": 0.0,
+        "warning_onset_intercept": 65.0,
+        "warning_max_speed_kmh": 250.0,
+        "warning_max_intercept": 90.0,
+        "warning_max_slope": 0.2,
+        "min_slip_threshold": 0.2,
+        "warning_grip_coefficient": 0.0
+      },
+      "lmu_class_warnings": {
+        "HYP": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 250.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.2
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          }
+        },
+        "LMP2_ELMS": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 200.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.15
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          }
+        },
+        "LMP2": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 220.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.18
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          }
+        },
+        "LMP3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 140.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.12
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          }
+        },
+        "GTE": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 160.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.14
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          }
+        },
+        "GT3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 130.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.09
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          }
+        }
+      }
+    },
+    "ACC": {
+      "game": "ACC",
+      "udp_port": 20444,
+      "f1_udp_port": 20777,
+      "com_port": "COM7",
+      "baudrate": 115200,
+      "system_enabled": true,
+      "send_rate": 50,
+      "read_rate": 333,
+      "alerts": {
+        "lock": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 50
+        },
+        "prediction": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 40
+        },
+        "brake_warning": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 20
+        }
+      },
+      "advanced": {
+        "brake_threshold": 0.05,
+        "slip_threshold": 0.3,
+        "slip_derivative_threshold": 0.0,
+        "prediction_horizon_ms": 30,
+        "warning_min_speed_kmh": 0.0,
+        "warning_onset_intercept": 65.0,
+        "warning_max_speed_kmh": 250.0,
+        "warning_max_intercept": 90.0,
+        "warning_max_slope": 0.2,
+        "warning_grip_coefficient": 0.0,
+        "min_slip_threshold": 0.05
+      },
+      "lmu_class_warnings": {
+        "HYP": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 250.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.2
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP2_ELMS": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 200.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.15
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP2": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 220.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.18
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 140.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.12
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "GTE": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 160.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.14
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "GT3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 130.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.09
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        }
+      }
+    },
+    "ACR": {
+      "game": "ACR",
+      "com_port": "COM7",
+      "udp_port": 20444,
+      "f1_udp_port": 20777,
+      "baudrate": 115200,
+      "system_enabled": true,
+      "send_rate": 100,
+      "read_rate": 1000,
+      "alerts": {
+        "lock": {
+          "enabled": true,
+          "frequency_hz": 70,
+          "intensity": 70
+        },
+        "prediction": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 40
+        }
+      },
+      "advanced": {
+        "brake_threshold": 0.05,
+        "min_slip_threshold": 0.2,
+        "slip_threshold": 0.5,
+        "slip_derivative_threshold": 0.3,
+        "prediction_horizon_ms": 20,
+        "warning_min_speed_kmh": 0.0,
+        "warning_grip_coefficient": 0.0,
+        "warning_onset_intercept": 65.0,
+        "warning_max_speed_kmh": 250.0,
+        "warning_max_intercept": 90.0,
+        "warning_max_slope": 0.2
+      },
+      "lmu_class_warnings": {
+        "HYP": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 250.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.2
+          }
+        },
+        "LMP2_ELMS": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 200.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.15
+          }
+        },
+        "LMP2": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 220.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.18
+          }
+        },
+        "LMP3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 140.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.12
+          }
+        },
+        "GTE": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 160.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.14
+          }
+        },
+        "GT3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 130.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.09
+          }
+        }
+      }
+    },
+    "FH6": {
+      "game": "AC",
+      "udp_port": 20444,
+      "f1_udp_port": 20777,
+      "com_port": "COM7",
+      "baudrate": 115200,
+      "system_enabled": true,
+      "send_rate": 50,
+      "read_rate": 1000,
+      "alerts": {
+        "lock": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 50
+        },
+        "prediction": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 40
+        },
+        "brake_warning": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 20
+        }
+      },
+      "advanced": {
+        "brake_threshold": 0.05,
+        "slip_threshold": 0.4,
+        "slip_derivative_threshold": 0.0,
+        "prediction_horizon_ms": 30,
+        "warning_min_speed_kmh": 0.0,
+        "warning_onset_intercept": 65.0,
+        "warning_max_speed_kmh": 250.0,
+        "warning_max_intercept": 90.0,
+        "warning_max_slope": 0.2,
+        "warning_grip_coefficient": 0.0,
+        "min_slip_threshold": 0.05
+      },
+      "lmu_class_warnings": {
+        "HYP": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 250.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.2
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP2_ELMS": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 200.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.15
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP2": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 220.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.18
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 140.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.12
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "GTE": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 160.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.14
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "GT3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 130.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.09
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        }
+      }
+    },
+    "IRACING": {
+      "game": "LMU",
+      "udp_port": 20444,
+      "f1_udp_port": 20777,
+      "com_port": "COM7",
+      "baudrate": 115200,
+      "system_enabled": true,
+      "send_rate": 50,
+      "read_rate": 333,
+      "alerts": {
+        "lock": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 50
+        },
+        "prediction": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 40
+        },
+        "brake_warning": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 20
+        }
+      },
+      "advanced": {
+        "brake_threshold": 0.05,
+        "slip_threshold": 0.5,
+        "slip_derivative_threshold": 0.0,
+        "prediction_horizon_ms": 30,
+        "warning_min_speed_kmh": 0.0,
+        "warning_onset_intercept": 65.0,
+        "warning_max_speed_kmh": 250.0,
+        "warning_max_intercept": 90.0,
+        "warning_max_slope": 0.2,
+        "min_slip_threshold": 0.05,
+        "warning_grip_coefficient": 0.0
+      },
+      "lmu_class_warnings": {
+        "HYP": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 250.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.2
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          }
+        },
+        "LMP2_ELMS": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 200.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.15
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          }
+        },
+        "LMP2": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 220.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.18
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          }
+        },
+        "LMP3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 140.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.12
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          }
+        },
+        "GTE": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 160.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.14
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          }
+        },
+        "GT3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 130.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.09
+          },
+          "detection": {
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
+          }
+        }
+      }
+    },
+    "F126": {
+      "game": "LMU",
+      "udp_port": 20444,
+      "f1_udp_port": 20777,
+      "com_port": "COM7",
+      "baudrate": 115200,
+      "system_enabled": true,
+      "send_rate": 50,
+      "read_rate": 333,
+      "alerts": {
+        "lock": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 50
+        },
+        "prediction": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 40
+        },
+        "brake_warning": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 20
+        }
+      },
+      "advanced": {
+        "brake_threshold": 0.05,
+        "slip_threshold": 0.5,
+        "slip_derivative_threshold": 0.0,
+        "prediction_horizon_ms": 30,
+        "warning_min_speed_kmh": 0.0,
+        "warning_onset_intercept": 65.0,
+        "warning_max_speed_kmh": 250.0,
+        "warning_max_intercept": 90.0,
+        "warning_max_slope": 0.2,
+        "min_slip_threshold": 0.05
+      },
+      "lmu_class_warnings": {
+        "HYP": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 250.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.2
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP2_ELMS": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 200.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.15
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP2": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 220.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.18
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 140.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.12
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "GTE": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 160.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.14
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "GT3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 130.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.09
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        }
+      }
+    },
+    "ACEVO": {
+      "game": "LMU",
+      "udp_port": 20444,
+      "f1_udp_port": 20777,
+      "com_port": "COM7",
+      "baudrate": 115200,
+      "system_enabled": true,
+      "send_rate": 50,
+      "read_rate": 333,
+      "alerts": {
+        "lock": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 50
+        },
+        "prediction": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 40
+        },
+        "brake_warning": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 20
+        }
+      },
+      "advanced": {
+        "brake_threshold": 0.05,
+        "slip_threshold": 0.5,
+        "slip_derivative_threshold": 0.0,
+        "prediction_horizon_ms": 30,
+        "warning_min_speed_kmh": 0.0,
+        "warning_onset_intercept": 65.0,
+        "warning_max_speed_kmh": 250.0,
+        "warning_max_intercept": 90.0,
+        "warning_max_slope": 0.2,
+        "min_slip_threshold": 0.05
+      },
+      "lmu_class_warnings": {
+        "HYP": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 250.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.2
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP2_ELMS": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 200.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.15
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP2": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 220.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.18
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 140.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.12
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "GTE": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 160.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.14
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "GT3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 130.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.09
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        }
+      }
+    },
+    "R3E": {
+      "game": "LMU",
+      "udp_port": 20444,
+      "f1_udp_port": 20777,
+      "com_port": "COM7",
+      "baudrate": 115200,
+      "system_enabled": true,
+      "send_rate": 50,
+      "read_rate": 333,
+      "alerts": {
+        "lock": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 50
+        },
+        "prediction": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 40
+        },
+        "brake_warning": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 20
+        }
+      },
+      "advanced": {
+        "brake_threshold": 0.05,
+        "slip_threshold": 0.5,
+        "slip_derivative_threshold": 0.0,
+        "prediction_horizon_ms": 30,
+        "warning_min_speed_kmh": 0.0,
+        "warning_onset_intercept": 65.0,
+        "warning_max_speed_kmh": 250.0,
+        "warning_max_intercept": 90.0,
+        "warning_max_slope": 0.2,
+        "min_slip_threshold": 0.05
+      },
+      "lmu_class_warnings": {
+        "HYP": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 250.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.2
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP2_ELMS": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 200.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.15
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP2": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 220.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.18
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 140.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.12
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "GTE": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 160.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.14
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "GT3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 130.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.09
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        }
+      }
+    },
+    "AMS2": {
+      "game": "LMU",
+      "udp_port": 20444,
+      "f1_udp_port": 20777,
+      "com_port": "COM7",
+      "baudrate": 115200,
+      "system_enabled": true,
+      "send_rate": 50,
+      "read_rate": 1000,
+      "alerts": {
+        "lock": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 50
+        },
+        "prediction": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 40
+        },
+        "brake_warning": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 20
+        }
+      },
+      "advanced": {
+        "brake_threshold": 0.05,
+        "slip_threshold": 0.13,
+        "slip_derivative_threshold": 0.0,
+        "prediction_horizon_ms": 30,
+        "warning_min_speed_kmh": 0.0,
+        "warning_onset_intercept": 65.0,
+        "warning_max_speed_kmh": 250.0,
+        "warning_max_intercept": 90.0,
+        "warning_max_slope": 0.2,
+        "warning_grip_coefficient": 0.0,
+        "min_slip_threshold": 0.05
+      },
+      "lmu_class_warnings": {
+        "HYP": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 250.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.2
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP2_ELMS": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 10.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 200.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.15
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP2": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 220.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.18
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "LMP3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 140.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.12
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "GTE": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 160.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.14
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        },
+        "GT3": {
+          "alert": {
+            "enabled": true,
+            "frequency_hz": 40,
+            "intensity": 20
+          },
+          "advanced": {
+            "warning_min_speed_kmh": 1.0,
+            "warning_grip_coefficient": 0.0,
+            "warning_wear_coefficient": 0.0,
+            "warning_onset_intercept": 65.0,
+            "warning_max_speed_kmh": 130.0,
+            "warning_max_intercept": 90.0,
+            "warning_max_slope": 0.09
+          },
+          "detection": {
+            "min_slip_threshold": 0.05
+          }
+        }
+      }
+    }
+  },
+  "global_brake_warning": {
+    "alert": {
+      "enabled": false,
+      "frequency_hz": 30,
+      "intensity": 20
+    },
+    "detection": {
+      "brake_threshold": 0.05,
+      "min_slip_threshold": 0.2,
+      "slip_threshold": 0.5,
+      "slip_derivative_threshold": 0.3,
+      "prediction_horizon_ms": 20
+    },
+    "alerts": {
+      "lock": {
+        "enabled": true,
+        "frequency_hz": 70,
+        "intensity": 70
+      },
+      "prediction": {
+        "enabled": true,
+        "frequency_hz": 40,
+        "intensity": 40
+      }
+    },
+    "advanced": {
+      "warning_min_speed_kmh": 2.0,
+      "warning_grip_coefficient": 10.0,
+      "warning_wear_coefficient": 1.0,
+      "warning_onset_intercept": 65.0,
+      "warning_max_speed_kmh": 250.0,
+      "warning_max_intercept": 90.0,
+      "warning_max_slope": 0.2
+    }
+  }
+}
