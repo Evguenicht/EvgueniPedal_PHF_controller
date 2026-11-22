@@ -680,20 +680,25 @@
           "enabled": true,
           "frequency_hz": 40,
           "intensity": 40
+        },
+        "brake_warning": {
+          "enabled": true,
+          "frequency_hz": 40,
+          "intensity": 20
         }
       },
       "advanced": {
         "brake_threshold": 0.05,
-        "min_slip_threshold": 0.2,
         "slip_threshold": 0.5,
         "slip_derivative_threshold": 0.3,
         "prediction_horizon_ms": 20,
         "warning_min_speed_kmh": 0.0,
-        "warning_grip_coefficient": 0.0,
         "warning_onset_intercept": 65.0,
         "warning_max_speed_kmh": 250.0,
         "warning_max_intercept": 90.0,
-        "warning_max_slope": 0.2
+        "warning_max_slope": 0.2,
+        "min_slip_threshold": 0.2,
+        "warning_grip_coefficient": 0.0
       },
       "lmu_class_warnings": {
         "HYP": {
@@ -724,7 +729,7 @@
           "advanced": {
             "warning_min_speed_kmh": 1.0,
             "warning_grip_coefficient": 10.0,
-            "warning_wear_coefficient": 0.0,
+            "warning_wear_coefficient": 1.0,
             "warning_onset_intercept": 65.0,
             "warning_max_speed_kmh": 250.0,
             "warning_max_intercept": 90.0,
@@ -964,7 +969,23 @@
             "warning_max_slope": 0.2
           },
           "detection": {
-            "min_slip_threshold": 0.05
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
           }
         },
         "LMP2_ELMS": {
@@ -983,7 +1004,23 @@
             "warning_max_slope": 0.15
           },
           "detection": {
-            "min_slip_threshold": 0.05
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
           }
         },
         "LMP2": {
@@ -1002,7 +1039,23 @@
             "warning_max_slope": 0.18
           },
           "detection": {
-            "min_slip_threshold": 0.05
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
           }
         },
         "LMP3": {
@@ -1021,7 +1074,23 @@
             "warning_max_slope": 0.12
           },
           "detection": {
-            "min_slip_threshold": 0.05
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
           }
         },
         "GTE": {
@@ -1040,7 +1109,23 @@
             "warning_max_slope": 0.14
           },
           "detection": {
-            "min_slip_threshold": 0.05
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
           }
         },
         "GT3": {
@@ -1059,7 +1144,23 @@
             "warning_max_slope": 0.09
           },
           "detection": {
-            "min_slip_threshold": 0.05
+            "brake_threshold": 0.05,
+            "min_slip_threshold": 0.05,
+            "slip_threshold": 0.5,
+            "slip_derivative_threshold": 0.0,
+            "prediction_horizon_ms": 30
+          },
+          "alerts": {
+            "lock": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 50
+            },
+            "prediction": {
+              "enabled": true,
+              "frequency_hz": 40,
+              "intensity": 40
+            }
           }
         }
       }
@@ -1942,12 +2043,12 @@
     "alert": {
       "enabled": false,
       "frequency_hz": 30,
-      "intensity": 20
+      "intensity": 18
     },
     "detection": {
       "brake_threshold": 0.05,
       "min_slip_threshold": 0.2,
-      "slip_threshold": 0.5,
+      "slip_threshold": 0.6,
       "slip_derivative_threshold": 0.3,
       "prediction_horizon_ms": 20
     },
@@ -1955,7 +2056,7 @@
       "lock": {
         "enabled": true,
         "frequency_hz": 70,
-        "intensity": 70
+        "intensity": 55
       },
       "prediction": {
         "enabled": true,
@@ -1970,7 +2071,7 @@
       "warning_onset_intercept": 65.0,
       "warning_max_speed_kmh": 250.0,
       "warning_max_intercept": 90.0,
-      "warning_max_slope": 0.2
+      "warning_max_slope": 0.19
     }
   }
 }

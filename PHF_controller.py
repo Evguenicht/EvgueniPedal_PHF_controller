@@ -39,6 +39,8 @@ DEFAULT_CONFIG = {
         "lock": {"enabled": True, "frequency_hz": 40, "intensity": 50},
         "prediction": {"enabled": True, "frequency_hz": 40, "intensity": 40},
         "brake_warning": {"enabled": True, "frequency_hz": 40, "intensity": 20},
+        "understeer": {"enabled": True, "frequency_hz": 10, "intensity": 50},
+        "oversteer": {"enabled": True, "frequency_hz": 10, "intensity": 50},
     },
     "advanced": {
         "brake_threshold": 0.05,
@@ -46,6 +48,11 @@ DEFAULT_CONFIG = {
         "slip_threshold": 0.5,
         "slip_derivative_threshold": 0.0,
         "prediction_horizon_ms": 30,
+        "throttle_min_input": 5.0,
+        "understeer_slip_min": 0.05,
+        "understeer_slip_max": 0.10,
+        "oversteer_slip_min": 0.05,
+        "oversteer_slip_max": 0.10,
         "warning_min_speed_kmh": 0.0,
         "warning_grip_coefficient": 0.0,
         "warning_wear_coefficient": 0.0,
@@ -328,8 +335,49 @@ def load_config():
             ) from exc
 
     game = str(config.get("game", "LMU")).upper()
+
+    # Les réglages généraux de détection et de vibration sont édités dans
+    # global_brake_warning par le launcher. Pour les jeux hors LMU, ils doivent
+    # alimenter les paramètres réellement utilisés par le contrôleur.
+    # LMU conserve ses réglages propres à chaque classe, appliqués plus bas.
+    if game != "LMU":
+        shared_warning = config.get("global_brake_warning", {})
+        shared_detection = shared_warning.get("detection", {})
+        if isinstance(shared_detection, dict):
+            for key in (
+                "brake_threshold",
+                "min_slip_threshold",
+                "slip_threshold",
+                "slip_derivative_threshold",
+                "prediction_horizon_ms",
+            ):
+                if key in shared_detection:
+                    config["advanced"][key] = shared_detection[key]
+
+        shared_alerts = shared_warning.get("alerts", {})
+        if isinstance(shared_alerts, dict):
+            for alert_name in ("lock", "prediction"):
+                alert_values = shared_alerts.get(alert_name)
+                if isinstance(alert_values, dict):
+                    deep_update(config["alerts"][alert_name], alert_values)
+
     if game not in ("AC", "ACC", "ACR", "LMU", "FH6", "IRACING", "F126", "ACEVO", "R3E", "AMS2"):
         raise ValueError(f"Jeu non reconnu dans {CONFIG_PATH.name} : {game}")
+    # Normaliser les seuils communs chargés depuis le launcher.
+    advanced = config["advanced"]
+    advanced["brake_threshold"] = max(0.0, min(1.0, float(advanced.get("brake_threshold", 0.05))))
+    advanced["min_slip_threshold"] = max(0.0, min(10.0, float(advanced.get("min_slip_threshold", 0.05))))
+    advanced["slip_threshold"] = max(
+        advanced["min_slip_threshold"],
+        min(10.0, float(advanced.get("slip_threshold", 0.5)))
+    )
+    advanced["slip_derivative_threshold"] = max(
+        0.0, float(advanced.get("slip_derivative_threshold", 0.0))
+    )
+    advanced["prediction_horizon_ms"] = max(
+        1, min(250, int(advanced.get("prediction_horizon_ms", 30)))
+    )
+
     for key in ("lock", "prediction", "brake_warning"):
         hz = int(config["alerts"][key].get("frequency_hz", 40))
         if hz not in ALLOWED_FREQUENCIES:
@@ -400,16 +448,269 @@ def load_config():
     return config
 
 
-# Trames capturées dans Pit House : 10 à 100 Hz, intensités 0 à 100 %.
-# Aucun octet ni checksum n'est généré : on réutilise le module de captures.
+# Trames capturées dans Pit House : frein via PHF_protocol et accélérateur
+# via les captures USBPcap fournies (10 et 20 Hz).
+# Aucun octet ni checksum n'est recalculé.
 from PHF_protocol import get_frame, STOP_FRAME
 
 
-def moza_frame_for_intensity(intensity, frequency_hz):
+# Trames accélérateur extraites des captures USBPcap : 10 et 20 Hz, 0 à 100 %.
+# Les octets et le checksum sont conservés tels que capturés.
+THROTTLE_FRAMES = {
+    10: {
+        0: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 00 00 CB'),
+        1: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 02 8F 5C'),
+        2: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 05 1E EE'),
+        3: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 07 AE 80'),
+        4: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 0A 3D 12'),
+        5: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 0C CC A3'),
+        6: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 0F 5C 36'),
+        7: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 11 EB C7'),
+        8: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 14 7A 59'),
+        9: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 17 0A EC'),
+        10: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 19 99 7D'),
+        11: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 1C 28 0F'),
+        12: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 1E B8 A1'),
+        13: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 21 47 33'),
+        14: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 23 D6 C4'),
+        15: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 26 66 57'),
+        16: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 28 F5 E8'),
+        17: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 2B 84 7A'),
+        18: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 2E 14 0D'),
+        19: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 30 A3 9E'),
+        20: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 33 33 31'),
+        21: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 35 C2 C2'),
+        22: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 38 51 54'),
+        23: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 3A E1 E6'),
+        24: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 3D 70 78'),
+        25: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 3F FF 09'),
+        26: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 42 8F 9C'),
+        27: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 45 1E 2E'),
+        28: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 47 AD BF'),
+        29: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 4A 3D 52'),
+        30: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 4C CC E3'),
+        31: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 4F 5B 75'),
+        32: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 51 EB 07'),
+        33: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 54 7A 99'),
+        34: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 57 09 2B'),
+        35: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 59 99 BD'),
+        36: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 5C 28 4F'),
+        37: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 5E B7 E0'),
+        38: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 61 47 73'),
+        39: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 63 D6 04'),
+        40: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 66 66 97'),
+        41: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 68 F5 28'),
+        42: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 6B 84 BA'),
+        43: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 6E 14 4D'),
+        44: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 70 A3 DE'),
+        45: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 73 32 70'),
+        46: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 75 C2 02'),
+        47: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 78 51 94'),
+        48: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 7A E0 25'),
+        49: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 7D 70 B8'),
+        50: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 7F FF 49'),
+        51: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 82 8E DB'),
+        52: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 85 1E 6E'),
+        53: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 87 AD FF'),
+        54: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 8A 3C 91'),
+        55: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 8C CC 23'),
+        56: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 8F 5B B5'),
+        57: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 91 EA 46'),
+        58: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 94 7A D9'),
+        59: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 97 09 6B'),
+        60: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 99 99 FD'),
+        61: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 9C 28 8F'),
+        62: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A 9E B7 20'),
+        63: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A A1 47 B3'),
+        64: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A A3 D6 44'),
+        65: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A A6 65 D6'),
+        66: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A A8 F5 68'),
+        67: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A AB 84 FA'),
+        68: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A AE 13 8C'),
+        69: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A B0 A3 1E'),
+        70: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A B3 32 B0'),
+        71: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A B5 C1 41'),
+        72: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A B8 51 D4'),
+        73: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A BA E0 65'),
+        74: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A BD 6F F7'),
+        75: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A BF FF 89'),
+        76: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A C2 8E 1B'),
+        77: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A C5 1D AD'),
+        78: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A C7 AD 3F'),
+        79: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A CA 3C D1'),
+        80: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A CC CC 63'),
+        81: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A CF 5B F5'),
+        82: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A D1 EA 86'),
+        83: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A D4 7A 19'),
+        84: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A D7 09 AB'),
+        85: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A D9 98 3C'),
+        86: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A DC 28 CF'),
+        87: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A DE B7 60'),
+        88: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A E1 46 F2'),
+        89: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A E3 D6 84'),
+        90: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A E6 65 16'),
+        91: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A E8 F4 A7'),
+        92: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A EB 84 3A'),
+        93: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A EE 13 CC'),
+        94: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A F0 A2 5D'),
+        95: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A F3 32 F0'),
+        96: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A F5 C1 81'),
+        97: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A F8 50 13'),
+        98: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A FA E0 A5'),
+        99: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A FD 6F 37'),
+        100: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 0A FF FF C9'),
+    },
+    20: {
+        0: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 00 00 D5'),
+        1: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 02 8F 66'),
+        2: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 05 1E F8'),
+        3: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 07 AE 8A'),
+        4: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 0A 3D 1C'),
+        5: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 0C CC AD'),
+        6: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 0F 5C 40'),
+        7: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 11 EB D1'),
+        8: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 14 7A 63'),
+        9: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 17 0A F6'),
+        10: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 19 99 87'),
+        11: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 1C 28 19'),
+        12: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 1E B8 AB'),
+        13: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 21 47 3D'),
+        14: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 23 D6 CE'),
+        15: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 26 66 61'),
+        16: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 28 F5 F2'),
+        17: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 2B 84 84'),
+        18: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 2E 14 17'),
+        19: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 30 A3 A8'),
+        20: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 33 33 3B'),
+        21: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 35 C2 CC'),
+        22: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 38 51 5E'),
+        23: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 3A E1 F0'),
+        24: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 3D 70 82'),
+        25: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 3F FF 13'),
+        26: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 42 8F A6'),
+        27: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 45 1E 38'),
+        28: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 47 AD C9'),
+        29: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 4A 3D 5C'),
+        30: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 4C CC ED'),
+        31: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 4F 5B 7F'),
+        32: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 51 EB 11'),
+        33: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 54 7A A3'),
+        34: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 57 09 35'),
+        35: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 59 99 C7'),
+        36: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 5C 28 59'),
+        37: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 5E B7 EA'),
+        38: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 61 47 7D'),
+        39: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 63 D6 0E'),
+        40: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 66 66 A1'),
+        41: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 68 F5 32'),
+        42: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 6B 84 C4'),
+        43: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 6E 14 57'),
+        44: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 70 A3 E8'),
+        45: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 73 32 7A'),
+        46: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 75 C2 0C'),
+        47: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 78 51 9E'),
+        48: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 7A E0 2F'),
+        49: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 7D 70 C2'),
+        50: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 7F FF 53'),
+        51: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 82 8E E5'),
+        52: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 85 1E 78'),
+        53: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 87 AD 09'),
+        54: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 8A 3C 9B'),
+        55: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 8C CC 2D'),
+        56: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 8F 5B BF'),
+        57: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 91 EA 50'),
+        58: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 94 7A E3'),
+        59: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 97 09 75'),
+        60: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 99 99 07'),
+        61: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 9C 28 99'),
+        62: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 9E B7 2A'),
+        63: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 A1 47 BD'),
+        64: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 A3 D6 4E'),
+        65: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 A6 65 E0'),
+        66: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 A8 F5 72'),
+        67: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 AB 84 04'),
+        68: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 AE 13 96'),
+        69: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 B0 A3 28'),
+        70: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 B3 32 BA'),
+        71: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 B5 C1 4B'),
+        72: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 B8 51 DE'),
+        73: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 BA E0 6F'),
+        74: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 BD 6F 01'),
+        75: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 BF FF 93'),
+        76: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 C2 8E 25'),
+        77: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 C5 1D B7'),
+        78: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 C7 AD 49'),
+        79: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 CA 3C DB'),
+        80: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 CC CC 6D'),
+        81: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 CF 5B FF'),
+        82: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 D1 EA 90'),
+        83: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 D4 7A 23'),
+        84: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 D7 09 B5'),
+        85: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 D9 98 46'),
+        86: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 DC 28 D9'),
+        87: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 DE B7 6A'),
+        88: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 E1 46 FC'),
+        89: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 E3 D6 8E'),
+        90: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 E6 65 20'),
+        91: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 E8 F4 B1'),
+        92: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 EB 84 44'),
+        93: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 EE 13 D6'),
+        94: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 F0 A2 67'),
+        95: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 F3 32 FA'),
+        96: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 F5 C1 8B'),
+        97: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 F8 50 1D'),
+        98: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 FA E0 AF'),
+        99: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 FD 6F 41'),
+        100: bytes.fromhex('7E 0B 4D 12 01 01 01 00 01 00 C8 00 14 FF FF D3'),
+    },
+}
+
+SUPPORTED_THROTTLE_FREQUENCIES_HZ = tuple(sorted(THROTTLE_FRAMES))
+
+
+def phf_frame_for_intensity(intensity, frequency_hz, motor="brake"):
+    """Construit une commande PHF à partir des trames capturées.
+
+    motor="brake"    : table existante de PHF_protocol.py.
+    motor="throttle" : trames accélérateur capturées à 10 et 20 Hz.
+    """
     level = max(0, min(100, int(float(intensity) + 0.5)))
-    if level == 0:
-        return STOP_FRAME
-    return get_frame(int(frequency_hz), level)
+    frequency = int(frequency_hz)
+    motor = str(motor).strip().lower()
+
+    if motor == "brake":
+        if level == 0:
+            return STOP_FRAME
+        return get_frame(frequency, level)
+
+    if motor == "throttle":
+        try:
+            return THROTTLE_FRAMES[frequency][level]
+        except KeyError as exc:
+            supported = ", ".join(str(value) for value in SUPPORTED_THROTTLE_FREQUENCIES_HZ)
+            raise ValueError(
+                f"Trame accélérateur non capturée : {frequency} Hz. "
+                f"Fréquences disponibles : {supported} Hz."
+            ) from exc
+
+    raise ValueError("Moteur PHF inconnu : utiliser 'brake' ou 'throttle'.")
+
+
+def moza_frame_for_intensity(intensity, frequency_hz, motor="brake"):
+    """Alias conservé pour compatibilité avec les appels existants."""
+    return phf_frame_for_intensity(intensity, frequency_hz, motor=motor)
+
+
+def compute_progressive_slip_intensity(slip, slip_min, slip_max, max_intensity):
+    """Convert a per-axle slip magnitude into a progressive haptic intensity."""
+    slip = max(0.0, float(slip))
+    slip_min = max(0.0, float(slip_min))
+    slip_max = max(slip_min + 0.001, float(slip_max))
+    max_intensity = max(0.0, min(100.0, float(max_intensity)))
+    if slip <= slip_min or max_intensity <= 0.0:
+        return 0.0
+    progress = (slip - slip_min) / (slip_max - slip_min)
+    return max_intensity * min(1.0, max(0.0, progress))
 
 
 def compute_progressive_warning(brake_demand, speed_kmh, wheel_slips,
@@ -918,6 +1219,13 @@ def main():
     min_slip_threshold = float(advanced.get("min_slip_threshold", 0.05))
     slip_derivative_threshold = max(0.0, float(advanced.get("slip_derivative_threshold", 0.0)))
     prediction_horizon = max(0.001, float(advanced["prediction_horizon_ms"]) / 1000.0)
+    throttle_min_input = max(0.0, min(1.0, float(advanced.get("throttle_min_input", 5.0)) / 100.0))
+    understeer_slip_min = max(0.0, float(advanced.get("understeer_slip_min", 0.05)))
+    understeer_slip_max = max(understeer_slip_min + 0.001, float(advanced.get("understeer_slip_max", 0.10)))
+    oversteer_slip_min = max(0.0, float(advanced.get("oversteer_slip_min", 0.05)))
+    oversteer_slip_max = max(oversteer_slip_min + 0.001, float(advanced.get("oversteer_slip_max", 0.10)))
+    understeer_alert = alerts.get("understeer", {"enabled": True, "frequency_hz": 10, "intensity": 50})
+    oversteer_alert = alerts.get("oversteer", {"enabled": True, "frequency_hz": 10, "intensity": 50})
 
     if game == "FH6":
         physics_size = None
@@ -960,6 +1268,13 @@ def main():
         item = alerts[key]
         print(f"{label} : {'ON' if item['enabled'] else 'OFF'} | "
               f"{item['frequency_hz']} Hz | {item['intensity']} %")
+    print(
+        "Détection blocage : "
+        f"freinage>{brake_threshold:.3f} | "
+        f"glissement {min_slip_threshold:.3f}–{slip_threshold:.3f} | "
+        f"dérivée>{slip_derivative_threshold:.3f}/s | "
+        f"horizon={prediction_horizon * 1000:.0f} ms"
+    )
 
     ser = None
     game_handle = None
@@ -977,6 +1292,9 @@ def main():
     current_vibration_intensity = 0.0
     current_vibration_frequency = 40
     current_signal_mode = "OFF"
+    current_throttle_intensity = 0.0
+    current_throttle_frequency = 10
+    current_throttle_mode = "OFF"
     current_lmu_method = None
     current_r3e_vehicle = None
     current_ams2_vehicle = None
@@ -991,6 +1309,7 @@ def main():
 
     next_read = 0.0
     next_send = 0.0
+    next_throttle_send = 0.0
 
     try:
         # Conserver l'ordre validé : ouvrir COM7 avec Python avant Pit House.
@@ -1167,6 +1486,47 @@ def main():
                         wheel_slips = data["wheel_slips"]
                         wheel_manager.update(wheel_slips)
 
+                        # Prévention sous-virage / survirage : première intégration
+                        # volontairement limitée à Assetto Corsa (AC), dont le
+                        # lecteur transmet déjà wheelSlip pour FL, FR, RL et RR.
+                        throttle_target_intensity = 0.0
+                        throttle_target_frequency = 10
+                        throttle_mode = "OFF"
+                        if game == "AC" and system_enabled and float(data.get("gas", 0.0)) >= throttle_min_input:
+                            valid_slips = []
+                            for value in wheel_slips[:4]:
+                                try:
+                                    slip_value = abs(float(value))
+                                    if slip_value == slip_value and slip_value != float("inf"):
+                                        valid_slips.append(slip_value)
+                                    else:
+                                        valid_slips.append(0.0)
+                                except (TypeError, ValueError):
+                                    valid_slips.append(0.0)
+                            if len(valid_slips) == 4:
+                                front_slip = max(valid_slips[0:2])
+                                rear_slip = max(valid_slips[2:4])
+                                understeer_intensity = 0.0
+                                oversteer_intensity = 0.0
+                                if understeer_alert.get("enabled", True):
+                                    understeer_intensity = compute_progressive_slip_intensity(
+                                        front_slip, understeer_slip_min, understeer_slip_max,
+                                        understeer_alert.get("intensity", 50))
+                                if oversteer_alert.get("enabled", True):
+                                    oversteer_intensity = compute_progressive_slip_intensity(
+                                        rear_slip, oversteer_slip_min, oversteer_slip_max,
+                                        oversteer_alert.get("intensity", 50))
+                                if understeer_intensity >= oversteer_intensity and understeer_intensity > 0.0:
+                                    throttle_mode = "UNDERSTEER_PREVENTION"
+                                    throttle_target_intensity = understeer_intensity
+                                    throttle_target_frequency = int(understeer_alert.get("frequency_hz", 10))
+                                elif oversteer_intensity > 0.0:
+                                    throttle_mode = "OVERSTEER_PREVENTION"
+                                    throttle_target_intensity = oversteer_intensity
+                                    throttle_target_frequency = int(oversteer_alert.get("frequency_hz", 10))
+                                if throttle_target_frequency not in SUPPORTED_THROTTLE_FREQUENCIES_HZ:
+                                    throttle_target_frequency = 10
+
                         confirmed_lock = (
                             data["brake"] > active_brake_threshold
                             and wheel_manager.any_lock()
@@ -1271,6 +1631,33 @@ def main():
                             if previous_intensity > 0 and target_intensity <= 0:
                                 ser.write(STOP_FRAME)
 
+                        if throttle_mode != current_throttle_mode:
+                            if throttle_mode == "UNDERSTEER_PREVENTION":
+                                print(
+                                    f"UNDERSTEER PREVENTION | Front slip={front_slip:.3f} | "
+                                    f"Throttle={data.get('gas', 0.0) * 100:.1f} % | "
+                                    f"Vibration={throttle_target_intensity:.1f} %"
+                                )
+                            elif throttle_mode == "OVERSTEER_PREVENTION":
+                                print(
+                                    f"OVERSTEER PREVENTION | Rear slip={rear_slip:.3f} | "
+                                    f"Throttle={data.get('gas', 0.0) * 100:.1f} % | "
+                                    f"Vibration={throttle_target_intensity:.1f} %"
+                                )
+                            else:
+                                print("Throttle slip warning released | Throttle vibration OFF")
+                            current_throttle_mode = throttle_mode
+
+                        if (throttle_target_intensity != current_throttle_intensity
+                                or throttle_target_frequency != current_throttle_frequency):
+                            previous_throttle_intensity = current_throttle_intensity
+                            current_throttle_intensity = throttle_target_intensity
+                            current_throttle_frequency = throttle_target_frequency
+                            next_throttle_send = 0.0
+                            if previous_throttle_intensity > 0.0 and throttle_target_intensity <= 0.0:
+                                ser.write(phf_frame_for_intensity(
+                                    0, current_throttle_frequency, motor="throttle"))
+
                         # Fréquence de lecture :
                         # AC/ACR 333 Hz ; LMU attend ses événements de trame.
                         if game == "LMU":
@@ -1291,6 +1678,13 @@ def main():
 
                     current_vibration_intensity = 0.0
                     current_signal_mode = "OFF"
+                    if current_throttle_intensity > 0.0:
+                        try:
+                            ser.write(phf_frame_for_intensity(0, current_throttle_frequency, motor="throttle"))
+                        except Exception:
+                            pass
+                    current_throttle_intensity = 0.0
+                    current_throttle_mode = "OFF"
 
                     if game == "FH6" and forza_receiver:
                         forza_receiver.close()
@@ -1334,9 +1728,15 @@ def main():
             # --------------------------------------------
             if current_vibration_intensity > 0 and now >= next_send:
                 ser.write(moza_frame_for_intensity(
-                    current_vibration_intensity, current_vibration_frequency
+                    current_vibration_intensity, current_vibration_frequency, motor="brake"
                 ))
                 next_send = now + 1.0 / send_rate
+
+            if current_throttle_intensity > 0 and now >= next_throttle_send:
+                ser.write(phf_frame_for_intensity(
+                    current_throttle_intensity, current_throttle_frequency, motor="throttle"
+                ))
+                next_throttle_send = now + 1.0 / send_rate
 
             # Vider le buffer de réception.
             if ser.in_waiting:
@@ -1351,6 +1751,7 @@ def main():
         if ser and ser.is_open:
             try:
                 ser.write(STOP_FRAME)
+                ser.write(phf_frame_for_intensity(0, current_throttle_frequency, motor="throttle"))
                 time.sleep(0.1)
                 ser.close()
             except Exception:
